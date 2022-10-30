@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:meals/screens/categories_meals_screen.dart';
 import 'package:meals/screens/categories_screen.dart';
+import 'package:meals/utils/app_routes.dart';
 
 void main() => runApp(MyApp());
 
@@ -12,14 +14,15 @@ class MyApp extends StatelessWidget {
       primarySwatch: Colors.pink,
       canvasColor: const Color.fromRGBO(255, 255, 229, 1),
       textTheme: ThemeData.light().textTheme.copyWith(
-          titleMedium: const TextStyle(
-            fontSize: 20,
-            fontFamily: "RobotoCondensed",
+            titleMedium: const TextStyle(
+              fontSize: 20,
+              fontFamily: "RobotoCondensed",
+            ),
+            titleLarge: const TextStyle(
+              fontFamily: 'Raleway',
+              fontSize: 20,
+            ),
           ),
-          titleLarge: const TextStyle(
-            fontFamily: 'Raleway',
-            fontSize: 20,
-          )),
     );
     return MaterialApp(
       title: "Meals app",
@@ -28,7 +31,10 @@ class MyApp extends StatelessWidget {
           secondary: Colors.amber,
         ),
       ),
-      home: CategoriesScreen(),
+      routes: {
+        AppRoutes.home: (context) => CategoriesScreen(),
+        AppRoutes.categoriesMeals: (context) => CategoriesMealsScreen(),
+      },
     );
   }
 }
