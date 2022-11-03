@@ -17,28 +17,46 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   Settings settings = Settings();
 
   List<Meal> _avaiableMeals = dummyMeals;
+  List<Meal> _favouriteMeals = [];
 
   void _filterMeals(Settings settings) {
-    setState(() {
-      
-      this.settings = settings;
+    setState(
+      () {
+        this.settings = settings;
 
-      _avaiableMeals = dummyMeals.where((meal) {
-        final filterGluten = settings.isGlutenFree && !meal.isGlutenFree;
-        final filterLactose = settings.isLactoseFree && !meal.isLactoseFree;
-        final filtervegan = settings.isVegan && !meal.isVegan;
-        final filterVegetarian = settings.isVegetarian && !meal.isVegetarian;
+        _avaiableMeals = dummyMeals.where(
+          (meal) {
+            final filterGluten = settings.isGlutenFree && !meal.isGlutenFree;
+            final filterLactose = settings.isLactoseFree && !meal.isLactoseFree;
+            final filtervegan = settings.isVegan && !meal.isVegan;
+            final filterVegetarian =
+                settings.isVegetarian && !meal.isVegetarian;
 
-        return !filterGluten &&
-            !filterLactose &&
-            !filtervegan &&
-            !filterVegetarian;
-      }).toList();
-    });
+            return !filterGluten &&
+                !filterLactose &&
+                !filtervegan &&
+                !filterVegetarian;
+          },
+        ).toList();
+      },
+    );
+  }
+
+  void _toggleFavourite(Meal meal) {
+    setState(
+      () {
+        _favouriteMeals.contains(meal)
+            ? _favouriteMeals.remove(meal)
+            : _favouriteMeals.add(meal);
+      },
+    );
+  }
+
+  bool _isFavourite(Meal meal) {
+    return _favouriteMeals.contains(meal);
   }
 
   @override
@@ -66,10 +84,11 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       routes: {
-        AppRoutes.home: (ctx) => const TabsScrenn(),
+        AppRoutes.home: (ctx) => TabsScrenn(favouriteMeals: _favouriteMeals),
         AppRoutes.categoriesMeals: (ctx) =>
             CategoriesMealsScreen(meals: _avaiableMeals),
-        AppRoutes.mealDetail: (ctx) => MealDetailScreen(),
+        AppRoutes.mealDetail: (ctx) => MealDetailScreen(
+            onToggleFavourite: _toggleFavourite, isFavourite: _isFavourite),
         AppRoutes.settings: (ctx) => SettingsScreen(
               onSettingsChanged: _filterMeals,
               settings: settings,
